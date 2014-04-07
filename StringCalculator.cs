@@ -7,12 +7,13 @@ namespace TddKata1
 {
     class StringCalculator
     {
-        private List<ProcessValueAction> _numberStrageies;
-
-        private delegate void ProcessValueAction(int newNumber, ref int aggregate, ref bool stopProcessing);
-
+        List<int> _invalidNumbers;
+        List<ProcessValueAction> _numberStrageies;
+        delegate void ProcessValueAction(int newNumber, ref int aggregate, ref bool stopProcessing);
+        
         public StringCalculator()
         {
+            _invalidNumbers = new List<int>(); 
             _numberStrageies = new List<ProcessValueAction>();
             _numberStrageies.Add(ThrowOnNegativeValues);
             _numberStrageies.Add(SkipNumbersLargerThan1000);
@@ -30,11 +31,11 @@ namespace TddKata1
                 stopProcessing = true;
         }
 
-        private static void ThrowOnNegativeValues(int newNumber, ref int aggregate, ref bool stopProcessing)
+        private void ThrowOnNegativeValues(int newNumber, ref int aggregate, ref bool stopProcessing)
         {
             if (newNumber < 0)
             {
-                throw new ArgumentOutOfRangeException("negatives not allowed");
+                _invalidNumbers.Add(newNumber);
             }
         }
 
@@ -60,6 +61,10 @@ namespace TddKata1
                     }    
                 }
             }
+            
+            if(_invalidNumbers.Count > 0)
+                throw new ArgumentException("Invalid Numbers: " + String.Join(", ", _invalidNumbers.Select(x => x.ToString())));
+
             return result;
         }
     }

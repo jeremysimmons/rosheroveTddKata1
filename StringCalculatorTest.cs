@@ -57,11 +57,39 @@ namespace TddKata1
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void Add_With_Negative_Number_Throws_Exception()
         {
             StringCalculator calc = new StringCalculator();
             int result = calc.Add("-1");
+        }
+
+        [TestMethod]
+        public void Add_With_Negative_Number_Includes_Number_In_Exception_Message()
+        {
+            StringCalculator calc = new StringCalculator();
+            try
+            {
+                int result = calc.Add("-1");
+            }
+            catch (Exception exception)
+            {
+                Assert.IsTrue(exception.Message.Contains("-1"));
+            }
+        }
+
+        [TestMethod]
+        public void Add_With_Multiple_Negative_Numbers_Includes_All_Numbers_In_Exception_Message()
+        {
+            StringCalculator calc = new StringCalculator();
+            try
+            {
+                int result = calc.Add("-1,1,-2");
+            }
+            catch (Exception exception)
+            {
+                Assert.IsTrue(exception.Message.Contains("-1, -2"));
+            }
         }
 
         [TestMethod]
